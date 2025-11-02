@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Generator</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #1e293b 0%, #334155 30%, #475569 60%, #64748b 100%);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        /* Subtle particles */
+        radial-gradient(1px 1px at 20px 30px, rgba(148,163,184,0.4), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(148,163,184,0.3), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(148,163,184,0.5), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(148,163,184,0.3), transparent),
+        radial-gradient(1px 1px at 160px 30px, rgba(148,163,184,0.4), transparent),
+        /* Subtle overlay */
+        radial-gradient(180deg, transparent 0%, transparent 70%, rgba(15,23,42,0.2) 85%, rgba(15,23,42,0.4) 100%);
+      background-size: 200px 200px, 300px 300px, 250px 250px, 400px 400px, 350px 350px, 100% 100%;
+      background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat;
+      animation: particleFloat 25s linear infinite, subtleShift 10s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30%;
+      background: 
+        /* Subtle geometric shapes */
+        radial-gradient(ellipse 25px 80px at 10% 100%, rgba(15,23,42,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 20px 60px at 20% 100%, rgba(15,23,42,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse 30px 90px at 35% 100%, rgba(15,23,42,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 25px 70px at 50% 100%, rgba(15,23,42,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 35px 100px at 65% 100%, rgba(15,23,42,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse 20px 75px at 80% 100%, rgba(15,23,42,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 30px 85px at 90% 100%, rgba(15,23,42,0.4) 0%, transparent 60%);
+      animation: gentleSway 15s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(-50px) translateX(0px);
+      }
+      100% {
+        transform: translateY(100%) translateX(50px);
+      }
+    }
+
+    @keyframes subtleShift {
+      0% {
+        transform: translateX(-1px);
+      }
+      100% {
+        transform: translateX(1px);
+      }
+    }
+
+    @keyframes gentleSway {
+      0% {
+        transform: translateX(-2px) scaleX(1);
+      }
+      100% {
+        transform: translateX(2px) scaleX(1.01);
+      }
+    }
+
+    html {
+      height: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .container {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .floating-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(148, 163, 184, 0.3) 0%, rgba(100, 116, 139, 0.2) 50%, rgba(71, 85, 105, 0.1) 100%);
+      box-shadow: 0 0 15px rgba(148, 163, 184, 0.2), inset 0 0 15px rgba(100, 116, 139, 0.1);
+      animation: float 25s infinite linear, subtleShimmer 4s ease-in-out infinite alternate;
+    }
+
+    .shape:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .shape:nth-child(2) {
+      width: 120px;
+      height: 120px;
+      left: 70%;
+      animation-delay: 5s;
+    }
+
+    .shape:nth-child(3) {
+      width: 60px;
+      height: 60px;
+      left: 40%;
+      animation-delay: 10s;
+    }
+
+    .shape:nth-child(4) {
+      width: 100px;
+      height: 100px;
+      left: 80%;
+      animation-delay: 15s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100%) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes subtleShimmer {
+      0% {
+        box-shadow: 0 0 15px rgba(148, 163, 184, 0.2), inset 0 0 15px rgba(100, 116, 139, 0.1);
+      }
+      100% {
+        box-shadow: 0 0 25px rgba(148, 163, 184, 0.4), inset 0 0 20px rgba(100, 116, 139, 0.2);
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 10;
+      gap: 30px;
+    }
+
+    .card-generator {
+      background: linear-gradient(145deg, 
+        rgba(30, 41, 59, 0.8) 0%, 
+        rgba(51, 65, 85, 0.9) 50%, 
+        rgba(71, 85, 105, 0.8) 100%);
+      backdrop-filter: blur(20px) saturate(120%);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(148, 163, 184, 0.2),
+        inset 0 1px 0 rgba(148, 163, 184, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 100%;
+      animation: generatorSlideUp 1s ease-out 0.6s both;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .card-generator::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border-radius: 24px;
+      pointer-events: none;
+    }
+
+    @keyframes generatorSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .mode-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 30px;
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.15) 100%);
+      backdrop-filter: blur(15px) saturate(180%);
+      border-radius: 12px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 12px 20px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(145deg, 
+        rgba(135, 206, 250, 0.3) 0%, 
+        rgba(173, 216, 230, 0.2) 50%, 
+        rgba(135, 206, 250, 0.25) 100%);
+      color: white;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 4px 15px rgba(135, 206, 250, 0.2);
+      text-shadow: 0 0 10px rgba(173, 216, 230, 0.5);
+    }
+
+    .mode-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #e2e8f0;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      background: linear-gradient(145deg, 
+        rgba(15, 23, 42, 0.6) 0%, 
+        rgba(30, 41, 59, 0.7) 100%);
+      backdrop-filter: blur(10px) saturate(120%);
+      font-family: 'Courier New', monospace;
+      box-shadow: 
+        inset 0 1px 0 rgba(148, 163, 184, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 4px 15px rgba(0, 0, 0, 0.2);
+      color: #f1f5f9;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.6);
+      box-shadow: 
+        0 0 0 3px rgba(59, 130, 246, 0.2),
+        inset 0 1px 0 rgba(148, 163, 184, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.25);
+      transform: translateY(-1px);
+      background: linear-gradient(145deg, 
+        rgba(15, 23, 42, 0.8) 0%, 
+        rgba(30, 41, 59, 0.9) 100%);
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(145deg, 
+        rgba(135, 206, 250, 0.3) 0%, 
+        rgba(173, 216, 230, 0.2) 50%, 
+        rgba(135, 206, 250, 0.25) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      color: white;
+      border: 1px solid rgba(173, 216, 230, 0.4);
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 8px 25px rgba(135, 206, 250, 0.2);
+      text-shadow: 0 0 15px rgba(173, 216, 230, 0.8);
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 12px 35px rgba(135, 206, 250, 0.3);
+      background: linear-gradient(145deg, 
+        rgba(135, 206, 250, 0.4) 0%, 
+        rgba(173, 216, 230, 0.25) 50%, 
+        rgba(135, 206, 250, 0.35) 100%);
+    }
+
+    .generate-btn:active {
+      transform: translateY(-1px) scale(0.98);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px rgba(135, 206, 250, 0.25);
+    }
+
+    .generate-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @keyframes generatePulse {
+      0% {
+        transform: translateY(-3px) scale(1);
+        box-shadow: 
+          inset 0 1px 0 rgba(255, 255, 255, 0.4),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+          0 12px 35px rgba(135, 206, 250, 0.3);
+      }
+      30% {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 
+          inset 0 2px 0 rgba(255, 255, 255, 0.6),
+          inset 0 -2px 0 rgba(0, 0, 0, 0.1),
+          0 20px 50px rgba(135, 206, 250, 0.5),
+          0 0 30px rgba(173, 216, 230, 0.8);
+      }
+      100% {
+        transform: translateY(-3px) scale(1);
+        box-shadow: 
+          inset 0 1px 0 rgba(255, 255, 255, 0.4),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+          0 12px 35px rgba(135, 206, 250, 0.3);
+      }
+    }
+
+    @keyframes generateShake {
+      0%, 100% { transform: translateY(-3px) translateX(0); }
+      10% { transform: translateY(-3px) translateX(-2px); }
+      20% { transform: translateY(-3px) translateX(2px); }
+      30% { transform: translateY(-3px) translateX(-2px); }
+      40% { transform: translateY(-3px) translateX(2px); }
+      50% { transform: translateY(-3px) translateX(-1px); }
+      60% { transform: translateY(-3px) translateX(1px); }
+      70% { transform: translateY(-3px) translateX(-1px); }
+      80% { transform: translateY(-3px) translateX(1px); }
+      90% { transform: translateY(-3px) translateX(0); }
+    }
+
+    @keyframes particleBurst {
+      0% {
+        opacity: 1;
+        transform: scale(1) translate(0, 0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.3) translate(var(--dx), var(--dy));
+      }
+    }
+
+    @keyframes successRipple {
+      0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+      }
+      100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+      }
+    }
+
+    .cards-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 5px;
+    }
+
+    .cards-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+      color: #e2e8f0;
+    }
+
+    .copy-all-cards-btn {
+      padding: 10px 20px;
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.08) 50%, 
+        rgba(255, 255, 255, 0.12) 100%);
+      backdrop-filter: blur(15px) saturate(180%);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 4px 15px rgba(0, 0, 0, 0.1);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .copy-all-cards-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 6px 20px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.15) 100%);
+    }
+
+    .copy-all-cards-btn.copied {
+      background: linear-gradient(145deg, 
+        rgba(77, 208, 225, 0.3) 0%, 
+        rgba(77, 208, 225, 0.2) 50%, 
+        rgba(77, 208, 225, 0.25) 100%);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 4px 15px rgba(77, 208, 225, 0.2);
+    }
+
+    .cards-list {
+      max-height: 500px;
+      overflow-y: auto;
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.2) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+        0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-line {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #cbd5e1;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .card-line:last-child {
+      border-bottom: none;
+    }
+
+    .card-line:hover {
+      background: linear-gradient(90deg, rgba(173, 216, 230, 0.1) 0%, rgba(135, 206, 250, 0.05) 100%);
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(173, 216, 230, 0.2);
+    }
+
+    .card-data {
+      flex: 1;
+      letter-spacing: 1px;
+    }
+
+    .copy-btn {
+      padding: 4px 8px;
+      background: linear-gradient(145deg, 
+        rgba(59, 130, 246, 0.2) 0%, 
+        rgba(59, 130, 246, 0.1) 100%);
+      backdrop-filter: blur(10px) saturate(120%);
+      color: #e2e8f0;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      margin-left: 10px;
+      box-shadow: 
+        inset 0 1px 0 rgba(148, 163, 184, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .copy-btn:hover {
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.08) 100%);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 3px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .copy-btn.copied {
+      background: linear-gradient(145deg, 
+        rgba(77, 208, 225, 0.2) 0%, 
+        rgba(77, 208, 225, 0.1) 100%);
+      border-color: rgba(77, 208, 225, 0.4);
+      color: #0891b2;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 3px 12px rgba(77, 208, 225, 0.2);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .card-generator {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+      
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .mode-selector {
+        flex-direction: column;
+      }
+      
+      .copy-btn {
+        min-width: auto;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="container" id="container">
+   <div class="floating-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+   </div>
+   <main class="main-content">
+    <div class="card-generator">
+     <div class="mode-selector"><button type="button" class="mode-btn active" id="normalModeBtn">Normal Mode</button> <button type="button" class="mode-btn" id="quickModeBtn">Quick Input</button>
+     </div>
+     <form id="generatorForm"><!-- Normal Mode Fields -->
+      <div id="normalModeFields">
+       <div class="form-group"><label for="binInput" class="form-label">BIN Number (6-8 digits)</label> <input type="text" id="binInput" class="form-input" placeholder="Enter BIN (e.g., 4532, 5555, 378282)" maxlength="8" required>
+       </div>
+       <div class="input-row">
+        <div class="form-group"><label for="expiryMonth" class="form-label">Expiry Month</label> <select id="expiryMonth" class="form-input" required> <option value="">Select Month</option> <option value="01">01 - January</option> <option value="02">02 - February</option> <option value="03">03 - March</option> <option value="04">04 - April</option> <option value="05">05 - May</option> <option value="06">06 - June</option> <option value="07">07 - July</option> <option value="08">08 - August</option> <option value="09">09 - September</option> <option value="10">10 - October</option> <option value="11">11 - November</option> <option value="12">12 - December</option> </select>
+        </div>
+        <div class="form-group"><label for="expiryYear" class="form-label">Expiry Year</label> <select id="expiryYear" class="form-input" required> <option value="">Select Year</option> </select>
+        </div>
+       </div>
+      </div><!-- Quick Mode Fields -->
+      <div id="quickModeFields" class="hidden">
+       <div class="form-group"><label for="quickInput" class="form-label">Quick Input Format</label> <input type="text" id="quickInput" class="form-input" placeholder="55182770611xxxxx|08|28">
+       </div>
+      </div>
+      <div class="form-group"><label for="quantity" class="form-label">Number of Cards</label> <input type="number" id="quantity" class="form-input" placeholder="Enter number of cards (e.g., 100, 500, 1000)" min="1" max="10000" value="1" required>
+      </div><button type="submit" class="generate-btn" id="generateBtn"> Generate Cards </button>
+     </form>
+     <div id="generatedCardContainer" style="display: none;">
+      <div class="cards-header">
+       <h3 class="cards-title">Generated Cards</h3><button class="copy-all-cards-btn" id="copyAllCards">Copy All Cards</button>
+      </div>
+      <div class="cards-list" id="cardsList"><!-- Generated cards will be inserted here -->
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#1e293b",
+      surface_color: "#334155",
+      text_color: "#e2e8f0",
+      primary_action_color: "#3b82f6",
+      secondary_action_color: "#06b6d4",
+      font_family: "Inter",
+      font_size: 16
+    };
+
+    let config = {};
+    let generatedCards = [];
+    let currentMode = 'normal';
+
+    async function onConfigChange(newConfig) {
+      config = newConfig;
+      
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+      
+      document.body.style.fontFamily = `${fontFamily}, -apple-system, BlinkMacSystemFont, sans-serif`;
+      document.body.style.fontSize = `${fontSize}px`;
+      document.body.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, ${primaryColor} 100%)`;
+      
+      const formLabels = document.querySelectorAll('.form-label');
+      formLabels.forEach(label => {
+        label.style.color = textColor;
+        label.style.fontSize = `${fontSize * 0.875}px`;
+      });
+      
+      const formInputs = document.querySelectorAll('.form-input');
+      formInputs.forEach(input => {
+        input.style.color = textColor;
+        input.style.fontSize = `${fontSize}px`;
+      });
+      
+      const generateBtn = document.getElementById('generateBtn');
+      generateBtn.style.fontSize = `${fontSize * 1.125}px`;
+    }
+
+    // Visual effects functions
+    function triggerButtonEffects() {
+      const generateBtn = document.getElementById('generateBtn');
+      
+      // Add pulse and shake animation
+      generateBtn.style.animation = 'generatePulse 0.6s ease-out, generateShake 0.4s ease-out 0.1s';
+      
+      // Create particle burst effect
+      createParticleBurst(generateBtn);
+      
+      // Create success ripple
+      createSuccessRipple(generateBtn);
+      
+      // Reset animation after completion
+      setTimeout(() => {
+        generateBtn.style.animation = '';
+      }, 1000);
+    }
+
+    function createParticleBurst(button) {
+      const rect = button.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        
+        const angle = (i / 12) * Math.PI * 2;
+        const distance = 60 + Math.random() * 40;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+        
+        particle.style.cssText = `
+          position: fixed;
+          left: ${centerX}px;
+          top: ${centerY}px;
+          width: 4px;
+          height: 4px;
+          background: radial-gradient(circle, rgba(173, 216, 230, 0.9) 0%, rgba(135, 206, 250, 0.7) 100%);
+          border-radius: 50%;
+          box-shadow: 0 0 6px rgba(173, 216, 230, 0.8);
+          pointer-events: none;
+          z-index: 1000;
+          animation: particleBurst 0.8s ease-out forwards;
+        `;
+        
+        particle.style.setProperty('--dx', dx + 'px');
+        particle.style.setProperty('--dy', dy + 'px');
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+          if (particle.parentNode) {
+            particle.parentNode.removeChild(particle);
+          }
+        }, 800);
+      }
+    }
+
+    function createSuccessRipple(button) {
+      const rect = button.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      const ripple = document.createElement('div');
+      ripple.style.cssText = `
+        position: fixed;
+        left: ${centerX - 150}px;
+        top: ${centerY - 150}px;
+        z-index: 999;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(173, 216, 230, 0.3) 0%, transparent 70%);
+        pointer-events: none;
+        animation: successRipple 0.6s ease-out forwards;
+      `;
+      
+      document.body.appendChild(ripple);
+      
+      setTimeout(() => {
+        if (ripple.parentNode) {
+          ripple.parentNode.removeChild(ripple);
+        }
+      }, 600);
+    }
+
+    // Mode switching
+    const normalModeBtn = document.getElementById('normalModeBtn');
+    const quickModeBtn = document.getElementById('quickModeBtn');
+    const normalModeFields = document.getElementById('normalModeFields');
+    const quickModeFields = document.getElementById('quickModeFields');
+
+    normalModeBtn.addEventListener('click', () => {
+      currentMode = 'normal';
+      normalModeBtn.classList.add('active');
+      quickModeBtn.classList.remove('active');
+      normalModeFields.classList.remove('hidden');
+      quickModeFields.classList.add('hidden');
+      
+      // Clear quick input validation
+      document.getElementById('quickInput').removeAttribute('required');
+      document.getElementById('binInput').setAttribute('required', '');
+      document.getElementById('expiryMonth').setAttribute('required', '');
+      document.getElementById('expiryYear').setAttribute('required', '');
+    });
+
+    quickModeBtn.addEventListener('click', () => {
+      currentMode = 'quick';
+      quickModeBtn.classList.add('active');
+      normalModeBtn.classList.remove('active');
+      quickModeFields.classList.remove('hidden');
+      normalModeFields.classList.add('hidden');
+      
+      // Set quick input validation
+      document.getElementById('quickInput').setAttribute('required', '');
+      document.getElementById('binInput').removeAttribute('required');
+      document.getElementById('expiryMonth').removeAttribute('required');
+      document.getElementById('expiryYear').removeAttribute('required');
+    });
+
+    // Card generation functions
+    function generateCardFromBIN(bin, targetLength = 16) {
+      if (bin.length < 6) {
+        return null;
+      }
+      
+      let cardNumber = bin;
+      
+      while (cardNumber.length < targetLength - 1) {
+        cardNumber += Math.floor(Math.random() * 10);
+      }
+      
+      const checkDigit = calculateLuhnCheckDigit(cardNumber);
+      cardNumber += checkDigit;
+      
+      return cardNumber;
+    }
+
+    function calculateLuhnCheckDigit(cardNumber) {
+      let sum = 0;
+      let isEven = true;
+      
+      for (let i = cardNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cardNumber.charAt(i), 10);
+        
+        if (isEven) {
+          digit *= 2;
+          if (digit > 9) {
+            digit -= 9;
+          }
+        }
+        
+        sum += digit;
+        isEven = !isEven;
+      }
+      
+      return (10 - (sum % 10)) % 10;
+    }
+
+    function getCardType(number) {
+      const patterns = {
+        visa: /^4/,
+        mastercard: /^5[1-5]/,
+        amex: /^3[47]/,
+        discover: /^6(?:011|5)/,
+        diners: /^3[0689]/,
+        jcb: /^35/
+      };
+      
+      const cleanNumber = number.replace(/\s/g, '');
+      
+      for (const [type, pattern] of Object.entries(patterns)) {
+        if (pattern.test(cleanNumber)) {
+          return type.toUpperCase();
+        }
+      }
+      
+      return 'UNKNOWN';
+    }
+
+    function generateCVV(cardType) {
+      const length = cardType === 'AMEX' ? 4 : 3;
+      let cvv = '';
+      
+      for (let i = 0; i < length; i++) {
+        cvv += Math.floor(Math.random() * 10);
+      }
+      
+      return cvv;
+    }
+
+    function parseQuickInput(quickInput) {
+      const parts = quickInput.split('|');
+      if (parts.length !== 3) {
+        return null;
+      }
+      
+      const [binPart, month, year] = parts;
+      
+      // Extract BIN from the format like "55182770611xxxxx" or "551827706116xxxx"
+      const bin = binPart.replace(/x/gi, '');
+      
+      // Validate BIN is only digits and proper length
+      if (!/^\d+$/.test(bin) || bin.length < 6 || bin.length > 12) {
+        return null;
+      }
+      
+      if (!/^\d{2}$/.test(month) || parseInt(month) < 1 || parseInt(month) > 12) {
+        return null;
+      }
+      
+      if (!/^\d{2}$/.test(year)) {
+        return null;
+      }
+      
+      return { bin, month, year };
+    }
+
+    function copyToClipboard(text, button) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Initialize year dropdown
+    function initializeYearDropdown() {
+      const yearSelect = document.getElementById('expiryYear');
+      const currentYear = new Date().getFullYear();
+      
+      for (let year = currentYear; year <= currentYear + 10; year++) {
+        const option = document.createElement('option');
+        option.value = year.toString().slice(-2);
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      }
+    }
+
+    // Event listeners
+    const binInput = document.getElementById('binInput');
+    const quickInput = document.getElementById('quickInput');
+    const expiryMonth = document.getElementById('expiryMonth');
+    const expiryYear = document.getElementById('expiryYear');
+    const quantity = document.getElementById('quantity');
+    const generatorForm = document.getElementById('generatorForm');
+    const generateBtn = document.getElementById('generateBtn');
+    const generatedCardContainer = document.getElementById('generatedCardContainer');
+    const cardsList = document.getElementById('cardsList');
+
+    // BIN input validation
+    binInput.addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+
+    // Form submission
+    generatorForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Trigger visual effects
+      triggerButtonEffects();
+      
+      let bin, month, year;
+      const cardCount = parseInt(quantity.value);
+      
+      if (currentMode === 'normal') {
+        bin = binInput.value.trim();
+        month = expiryMonth.value;
+        year = expiryYear.value;
+        
+        if (bin.length < 6) {
+          showError('BIN must be at least 6 digits');
+          return;
+        }
+        
+        if (bin.length > 8) {
+          showError('BIN cannot exceed 8 digits');
+          return;
+        }
+        
+        if (!month || !year) {
+          showError('Please select both expiry month and year');
+          return;
+        }
+      } else {
+        const quickInputValue = quickInput.value.trim();
+        const parsed = parseQuickInput(quickInputValue);
+        
+        if (!parsed) {
+          showError('Invalid quick input format. Use: BINxxxx|MM|YY');
+          return;
+        }
+        
+        bin = parsed.bin;
+        month = parsed.month;
+        year = parsed.year;
+      }
+      
+      if (cardCount < 1 || cardCount > 10000) {
+        showError('Please enter a number between 1 and 10,000 cards');
+        return;
+      }
+      
+      // Clear previous cards
+      cardsList.innerHTML = '';
+      generatedCards = [];
+      
+      // Generate multiple cards
+      for (let i = 0; i < cardCount; i++) {
+        const cardNumber = generateCardFromBIN(bin);
+        if (!cardNumber) {
+          showError('Failed to generate card from BIN');
+          return;
+        }
+        
+        const cardType = getCardType(cardNumber);
+        const cvv = generateCVV(cardType);
+        const expiry = `${month}/${year}`;
+        
+        const cardData = {
+          number: cardNumber,
+          type: cardType,
+          expiry: expiry,
+          cvv: cvv
+        };
+        
+        generatedCards.push(cardData);
+        
+        // Create card element
+        const cardElement = createCardElement(cardData, i);
+        cardsList.appendChild(cardElement);
+      }
+      
+      generatedCardContainer.style.display = 'block';
+      generatedCardContainer.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function showError(message) {
+      // Create a temporary error message
+      const errorDiv = document.createElement('div');
+      errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(145deg, rgba(220, 38, 38, 0.9), rgba(185, 28, 28, 0.8));
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+      `;
+      errorDiv.textContent = message;
+      document.body.appendChild(errorDiv);
+      
+      setTimeout(() => {
+        document.body.removeChild(errorDiv);
+      }, 4000);
+    }
+
+    // Create card element function
+    function createCardElement(cardData, index) {
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'card-line';
+      
+      cardDiv.innerHTML = `
+        <div class="card-data">${cardData.number}|${cardData.expiry}|${cardData.cvv}</div>
+        <button class="copy-btn" onclick="copyCardData('${cardData.number}|${cardData.expiry}|${cardData.cvv}', this)">Copy</button>
+      `;
+      
+      return cardDiv;
+    }
+
+    // Copy individual card data
+    function copyCardData(data, button) {
+      copyToClipboard(data, button);
+    }
+
+    // Copy all cards button event listener
+    document.getElementById('copyAllCards').addEventListener('click', function() {
+      if (generatedCards.length === 0) {
+        return;
+      }
+      
+      const allCardsData = generatedCards.map(card => 
+        `${card.number}|${card.expiry}|${card.cvv}`
+      ).join('\n');
+      
+      copyToClipboard(allCardsData, this);
+    });
+
+    // Initialize
+    initializeYearDropdown();
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig: defaultConfig,
+        onConfigChange: onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => {
+                config.surface_color = value;
+                window.elementSdk.setConfig({ surface_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => {
+                config.primary_action_color = value;
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (value) => {
+                config.secondary_action_color = value;
+                window.elementSdk.setConfig({ secondary_action_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map()
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9983934f3296f890',t:'MTc2MjA4NTkxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
